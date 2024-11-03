@@ -1,3 +1,5 @@
+if(window.innerWidth>800){
+console.log('object')
 window.requestAnimFrame = (function() {
     return window.requestAnimationFrame ||
       window.webkitRequestAnimationFrame ||
@@ -81,4 +83,4 @@ window.requestAnimFrame = (function() {
   
   function rng(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  }}

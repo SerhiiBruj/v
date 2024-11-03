@@ -2,6 +2,7 @@
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
+    <meta  />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,6 +36,65 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+      }
+      :root {
+        --button-height: 2rem;
+        --button-color: rgb(138, 138, 138);
+      }
+
+      .fake-player {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 4rem;
+        padding: 2rem;
+        border: 0.2rem solid var(--button-color);
+        border-radius: 50%;
+        filter: drop-shadow(0 0 3.1rem rgba(0, 0, 0, 0.8));
+      }
+
+      button {
+        margin: 0;
+        padding: 0;
+      }
+
+      .play {
+        height: 0;
+        width: 0;
+        margin-left: calc(2 * 0.14 * var(--button-height));
+        background: none;
+        border: none;
+        border-top: var(--button-height) solid transparent;
+        border-bottom: var(--button-height) solid transparent;
+        border-left: calc(var(--button-height) * 2 * 0.86) solid
+          var(--button-color);
+      }
+
+      .pause {
+        position: relative;
+        background: none;
+        border: none;
+        height: calc(var(--button-height) * 2);
+        width: calc(var(--button-height) * 2 * 0.86);
+        &:before,
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          height: 100%;
+          width: 33%;
+          background: var(--button-color);
+        }
+        &:before {
+          left: 0;
+        }
+        &:after {
+          right: 0;
+        }
+      }
+
+      .hidden {
+        display: none;
       }
       p {
         text-align: center;
@@ -83,74 +143,196 @@
         font-family: "Caveat";
         font-optical-sizing: auto;
       }
+
+      .res {
+        height: 80%;
+        width: 30%;
+        border-radius: 40%;
+        background-color: black;
+      }
+      #res2 {
+        visibility: hidden;
+
+        position: relative;
+      }
+      input[type="range"] {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        -webkit-appearance: none;
+
+        width: 150px;
+        height: 10px;
+        background: #c0c0c0cc;
+        outline: none;
+        opacity: 0.95;
+        -webkit-transition: 0.2s;
+        transition: opacity 0.2s;
+        border-radius: 5px;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        background-color: #c5c5c5;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #848080;
+      }
+      .lyricsP {
+        font-size: 20px;
+        padding: 20px;
+        color: #c0c0c0cc;
+        font-weight: 700;
+        margin: 0px;
+      }
       .lyrics {
         width: 80%;
         height: 50%;
-        background-color: antiquewhite;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-      }
-      .playbutton {
-        background-color: rgba(128, 128, 128, 0.286);
 
-        border-radius: 50%;
-        padding: 2vw;
-        width: 7vw;
-        height: 40%;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        font-size: 20px;
+        align-items: center;
+        overflow-y: hidden;
+        overflow-x: hidden;
       }
-      .res {
-        height: 100%;
-        width: 30%;
-        background-color: black;
+      .playcont {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
-      #res3 {
-        display: none;
-        position: relative;
+
+      @media screen and (max-width: 750px) {
+        .card {
+          width: 100vw;
+          height: 100vh;
+          border-radius: 0px;
+        }
+        .playcont {
+          position: absolute;
+          justify-content: space-between;
+          align-items: center;
+          height: 50vw;
+        }
+        .songicon {
+          height: 40vw;
+          width: 40vw;
+        }
+        #volumeRange{
+          margin-top: 80px;
+        }
       }
     </style>
   </head>
   <body>
-    <canvas id="canv" style="display: none"></canvas>
-    <!-- <script src="./canvas.js"></script> -->
+
 
     <div class="card">
       <div class="song">
         <div class="conteiner">
-          <div class="songicon"></div>
+          <div class="songicon" id="songicon"></div>
           <div class="songtitle">Василина</div>
         </div>
-        <div class="playbutton">
-          <div class="res" id="res1"></div>
-          <div class="res" id="res2"></div>
-          <div class="res" id="res3"></div>
+        <div class="playcont" style="">
+          <div class="fake-player">
+            <button role="play" class="play"></button>
+            <button role="pause" class="pause hidden"></button>
+          </div>
+          <input
+            type="range"
+            id="volumeRange"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.5"
+          />
         </div>
       </div>
-      <div class="lyrics"></div>
+      <div class="lyrics" id="lyricsConteiner">
+        <p class="lyricsP">Текст Пісні</p>
+      </div>
     </div>
     <audio src="./Vasylyna.mp3" id="audio" style="display: none"></audio>
 
     <script>
+      let unpreptext = `Біля хати Василини затоптали трави,
+      Затоптали буйні трави хлопці кучеряві
+      Та вертаються додому всі із гарбузами.
+      Що ж ти робиш, Василино, з тими леґінями?
+      І співає Верховина, дзвінко пісня лине,
+      Дзвінко!
+      Василино, Василино, люба Василино!
+      Василино, Василино, файна Василино!
+      Із краси води не пити, знаю добре, знаю
+      Та чомусь твоєї хати також не минаю.
+      Посміхнися, озовися, верховинко люба,
+      Стану я в твоєму серці золотим відлунням!
+      І співає Верховина, дзвінко пісня лине,
+      Дзвінко!
+      Василино, Василино, люба Василино!
+      Василино, Василино, файна Василино!
+      І співає Верховина, дзвінко пісня лине,
+      Василино, Василино, люба Василино!
+      Василино, Василино, файна Васили
+      Файна Василино!
+      І співає Верховина, дзвінко пісня лине,
+      Дзвінко!
+      Василино, Василино, люба Василино!
+      Василино, Василино, файна Василино!`;
+
+      let lyrics = unpreptext.split(/\n/g);
+      const lyrCont = document.getElementById("lyricsConteiner");
       const audio = document.getElementById("audio");
-      const playbutton = document.getElementById("playbutton");
-      const res = Array.from(document.getElementsByClassName("res"));
+      const range = document.getElementById("volumeRange");
+      audio.volume = range.value;
+
+      range.addEventListener("input", () => {
+        audio.volume = range.value;
+      });
+
+      const player = document.querySelector(".fake-player");
       let isPlay = false;
+      let lyricGen = null;
 
-
-      
-      playbutton.addEventListener("click", () => play());
-      const play = () => {
+      function clickHandler() {
         if (isPlay) {
-          console.log(isPlay);
+          audio.pause();
+          isPlay = false;
+          lyricGen = null;
+          audio.currentTime = 0;
+          lyrCont.innerHTML = "";
         } else {
-          res[2].style.transform =
-            "rotateZ(117deg) translate(-9px, 36px) scaleY(0.9)";
-          console.log(isPlay);
+          lyrCont.innerHTML = "";
+          lyricGen = insertTextIntoLyrics();
+          audio.play();
           isPlay = true;
+          playLyrics();
         }
-      };
+
+        const buttons = Array.from(this.children);
+        buttons.forEach((button) => button.classList.toggle("hidden"));
+      }
+
+      player.addEventListener("click", clickHandler);
+
+      function* insertTextIntoLyrics() {
+        yield new Promise((resolve) => setTimeout(resolve, 33000));
+
+        for (let i = 0; i < lyrics.length; i++) {
+          let p = document.createElement("p");
+          p.classList.add("lyricsP");
+          p.innerText = lyrics[i];
+          lyrCont.insertAdjacentElement("afterbegin", p);
+          yield new Promise((resolve) => setTimeout(resolve, 4500));
+        }
+      }
+
+      async function playLyrics() {
+        while (isPlay && lyricGen) {
+          await lyricGen.next().value;
+        }
+      }
     </script>
   </body>
 </html>
