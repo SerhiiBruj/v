@@ -401,11 +401,11 @@
       }
 
       audio.addEventListener("ended", () => {
-        isPlay = false;
         lyricIndex = 0;
-        lyrCont.innerHTML = "<p class='lyricsP'>Текст Пісні</p>";
-        const buttons = Array.from(player.children);
-        buttons.forEach((button) => button.classList.remove("hidden"));
+        audio.currentTime=0;
+        timeoutToclear = setTimeout(() => {
+            insertTextIntoLyrics(lyricIndex);
+          }, 33000);
       });
     </script>
   </body>
