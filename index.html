@@ -10,7 +10,12 @@
       href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Dancing+Script:wght@400..700&display=swap"
       rel="stylesheet"
     />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Dancing+Script:wght@400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <title>FOR BEST HR</title>
     <style>
       body {
@@ -18,7 +23,7 @@
         width: 100%;
         margin: 0;
         overflow: hidden;
-        background: hsla(0, 5%, 5%, 1);
+        background: rgb(34, 34, 34);
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-image: linear-gradient(
@@ -140,7 +145,7 @@
       .songtitle {
         font-size: 35px;
         text-align: center;
-        color: rgb(182, 183, 183);
+        color: #ffffffcc;
         font-family: "Caveat";
         font-optical-sizing: auto;
       }
@@ -182,9 +187,10 @@
       .lyricsP {
         font-size: 20px;
         padding: 20px;
-        color: #c0c0c0cc;
+        color: #ffffffcc;
         font-weight: 700;
         margin: 0px;
+        font-family: "Noto Sans", sans-serif;
       }
       .lyrics {
         width: 80%;
@@ -203,11 +209,12 @@
         justify-content: center;
         align-items: center;
       }
-      @media screen and (max-width: 450px) {
+      @media screen and (max-width: 490px) {
         html {
           font-size: 4vw;
         }
         .card {
+          background-color: rgb(30, 29, 29);
           width: 100vw;
           height: 100vh;
           border-radius: 0px;
@@ -229,8 +236,6 @@
         }
       }
 
-
-      
       @media screen and (max-width: 320px) {
         html {
           font-size: 7vw;
@@ -334,8 +339,9 @@
           lyrCont.innerHTML = "<p class='lyricsP'>Текст Пісні</p>";
           clearTimeout(timeoutToclear);
         } else {
-          delay = audio.currentTime < 33 ?  (33 - audio.currentTime)*1000:2000
-          
+          delay =
+            audio.currentTime < 33 ? (33 - audio.currentTime) * 1000 : 2000;
+
           audio.play();
           isPlay = true;
 
