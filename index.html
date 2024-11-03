@@ -41,14 +41,16 @@
         --button-height: 2rem;
         --button-color: rgb(138, 138, 138);
       }
+     
 
       .fake-player {
         display: flex;
+        opacity: 0.8;
         justify-content: center;
         align-items: center;
         width: 4rem;
         padding: 2rem;
-        border: 0.2rem solid var(--button-color);
+        border: 0.5rem solid var(--button-color);
         border-radius: 50%;
         filter: drop-shadow(0 0 3.1rem rgba(0, 0, 0, 0.8));
       }
@@ -203,7 +205,10 @@
         align-items: center;
       }
 
-      @media screen and (max-width: 750px) {
+      @media screen and (max-width: 480px) {
+        html{
+        font-size: 7vw;
+      }
         .card {
           width: 100vw;
           height: 100vh;
@@ -213,14 +218,14 @@
           position: absolute;
           justify-content: space-between;
           align-items: center;
-          height: 50vw;
+          height: 80vw;
         }
         .songicon {
-          height: 40vw;
-          width: 40vw;
+          height: 70vw;
+          width: 70vw;
         }
         #volumeRange{
-          margin-top: 80px;
+          margin-top: 25vw;
         }
       }
     </style>
@@ -301,7 +306,7 @@
           isPlay = false;
           lyricGen = null;
           audio.currentTime = 0;
-          lyrCont.innerHTML = "";
+          lyrCont.innerHTML = "<p class='lyricsP'>Текст Пісні</p>";
         } else {
           lyrCont.innerHTML = "";
           lyricGen = insertTextIntoLyrics();
