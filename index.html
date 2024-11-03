@@ -209,7 +209,7 @@
         justify-content: center;
         align-items: center;
       }
-      @media screen and (max-width: 490px) {
+      @media screen and (max-width: 550px) {
         html {
           font-size: 4vw;
         }
@@ -340,7 +340,7 @@
           clearTimeout(timeoutToclear);
         } else {
           delay =
-            audio.currentTime < 33 ? (33 - audio.currentTime) * 1000 : 2000;
+            audio.currentTime < 33 ? (32 - audio.currentTime) * 1000 : 2000;
 
           audio.play();
           isPlay = true;
@@ -359,6 +359,7 @@
       function insertTextIntoLyrics(i) {
         if (isPlay) {
           if (i < lyrics.length) {
+            let timeout = lyricIndex === 7 || lyricIndex === 15 ? 16000 : 4500;
             let p = document.createElement("p");
             p.classList.add("lyricsP");
             p.innerText = lyrics[i];
@@ -367,7 +368,7 @@
 
             timeoutToclear = setTimeout(() => {
               insertTextIntoLyrics(lyricIndex);
-            }, 4500);
+            }, timeout);
           }
         }
       }
