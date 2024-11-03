@@ -2,7 +2,7 @@
 <html lang="uk">
   <head>
     <meta charset="UTF-8" />
-    <meta  />
+    <meta />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,7 +41,6 @@
         --button-height: 2rem;
         --button-color: rgb(138, 138, 138);
       }
-     
 
       .fake-player {
         display: flex;
@@ -206,9 +205,9 @@
       }
 
       @media screen and (max-width: 480px) {
-        html{
-        font-size: 7vw;
-      }
+        html {
+          font-size: 7vw;
+        }
         .card {
           width: 100vw;
           height: 100vh;
@@ -224,15 +223,13 @@
           height: 70vw;
           width: 70vw;
         }
-        #volumeRange{
+        #volumeRange {
           margin-top: 25vw;
         }
       }
     </style>
   </head>
   <body>
-
-
     <div class="card">
       <div class="song">
         <div class="conteiner">
@@ -298,21 +295,26 @@
 
       const player = document.querySelector(".fake-player");
       let isPlay = false;
-      let lyricGen = null;
+      let lyricIndex = 0;
+      let timeoutToclear;
+      let delay = audio.currentTime < 33 ? 4500 : 35 - audio.currentTime;
 
       function clickHandler() {
         if (isPlay) {
           audio.pause();
           isPlay = false;
-          lyricGen = null;
-          audio.currentTime = 0;
+
           lyrCont.innerHTML = "<p class='lyricsP'>Текст Пісні</p>";
+          clearTimeout(timeoutToclear);
         } else {
-          lyrCont.innerHTML = "";
-          lyricGen = insertTextIntoLyrics();
+          delay = audio.currentTime < 33 ?  (33 - audio.currentTime)*1000:2000
+          
           audio.play();
           isPlay = true;
-          playLyrics();
+
+          timeoutToclear = setTimeout(() => {
+            insertTextIntoLyrics(lyricIndex);
+          }, delay);
         }
 
         const buttons = Array.from(this.children);
@@ -321,23 +323,29 @@
 
       player.addEventListener("click", clickHandler);
 
-      function* insertTextIntoLyrics() {
-        yield new Promise((resolve) => setTimeout(resolve, 33000));
+      function insertTextIntoLyrics(i) {
+        if (isPlay) {
+          if (i < lyrics.length) {
+            let p = document.createElement("p");
+            p.classList.add("lyricsP");
+            p.innerText = lyrics[i];
+            lyrCont.insertAdjacentElement("afterbegin", p);
+            lyricIndex++;
 
-        for (let i = 0; i < lyrics.length; i++) {
-          let p = document.createElement("p");
-          p.classList.add("lyricsP");
-          p.innerText = lyrics[i];
-          lyrCont.insertAdjacentElement("afterbegin", p);
-          yield new Promise((resolve) => setTimeout(resolve, 4500));
+            timeoutToclear = setTimeout(() => {
+              insertTextIntoLyrics(lyricIndex);
+            }, 4500);
+          }
         }
       }
 
-      async function playLyrics() {
-        while (isPlay && lyricGen) {
-          await lyricGen.next().value;
-        }
-      }
+      audio.addEventListener("ended", () => {
+        isPlay = false;
+        lyricIndex = 0;
+        lyrCont.innerHTML = "<p class='lyricsP'>Текст Пісні</p>";
+        const buttons = Array.from(player.children);
+        buttons.forEach((button) => button.classList.remove("hidden"));
+      });
     </script>
   </body>
 </html>
